@@ -1,0 +1,11 @@
+/.idea/
+/target/
+/project/target/
+/bot/src/main/resources/application.conf
+/bot/target/
+/modules/service/target/
+/out/
+/modules/flyway/src/main/resources/application.conf
+/modules/flyway/target/
+/modules/database/src/main/resources/application.conf
+/logs/
