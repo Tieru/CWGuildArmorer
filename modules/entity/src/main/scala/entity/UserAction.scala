@@ -19,3 +19,11 @@ case class HeroForwardAction
   username: String,
   equipment: Seq[ItemInfo],
 ) extends UserForwardAction
+
+case class GuildForwardAction
+(
+  castle: Castle,
+  guildTag: String,
+  guildName: String,
+  commander: String,
+) extends UserForwardAction

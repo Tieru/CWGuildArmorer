@@ -2,7 +2,7 @@ package parsers
 
 import entity.player.Castle.Castle
 import entity.player.{Castle, Equipment, ItemInfo}
-import entity.{HeroForwardAction, OnStartAction}
+import entity.{GuildForwardAction, HeroForwardAction, OnStartAction}
 import org.parboiled2._
 
 //noinspection CaseClassParam,TypeAnnotation
@@ -29,10 +29,10 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   def HeroForwardRule = rule {
-    HeroCastleRule ~ GuildTag ~ Username ~ SkipToEquipmentPart ~ EquipmentTotal ~ oneOrMore(ANY) ~> HeroForwardAction
+    CastleRule ~ optional(GuildTag) ~ Username ~ SkipToEquipmentPart ~ EquipmentTotal ~ oneOrMore(ANY) ~> HeroForwardAction
   }
 
-  def HeroCastleRule: Rule1[Castle] = rule {
+  def CastleRule: Rule1[Castle] = rule {
     "\uD83C\uDF46" ~ push(Castle.Farm) |
       "☘️" ~ push(Castle.Bastion) |
       "\uD83C\uDF39" ~ push(Castle.Dawn) |
@@ -42,8 +42,8 @@ case class MessageParser(val input: ParserInput) extends Parser {
       "\uD83E\uDD87" ~ push(Castle.Night)
   }
 
-  def GuildTag: Rule1[Option[String]] = rule {
-    ch('[') ~ capture(ANY ~ ANY ~ ANY) ~ ch(']') ~> (Option(_)) | push(None)
+  def GuildTag: Rule1[String] = rule {
+    ch('[') ~ capture(ANY ~ ANY ~ ANY) ~ ch(']')
   }
 
   def Username: Rule1[String] = rule {
@@ -77,6 +77,20 @@ case class MessageParser(val input: ParserInput) extends Parser {
 
   def EquipmentName: Rule1[Option[Equipment]] = rule {
     capture(oneOrMore(!" +" ~ ANY)) ~ oneOrMore(!EOL ~ ANY) ~> (Equipment.byName(_))
+  }
+
+  // Guild
+
+  def GuildInfo = rule {
+    GuildName ~ GuildCommander ~ oneOrMore(ANY) ~> GuildForwardAction
+  }
+
+  def GuildName = rule {
+    CastleRule ~ GuildTag ~ " " ~ capture(oneOrMore(!EOL ~ ANY)) ~ EOL
+  }
+
+  def GuildCommander = rule {
+    "Commander: " ~ capture(oneOrMore(!EOL ~ ANY)) ~ EOL
   }
 
   // Commons

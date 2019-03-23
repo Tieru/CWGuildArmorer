@@ -77,7 +77,36 @@ class MessageParserTest extends FlatSpec {
     assert(info.guildTag.getOrElse("") == "RUМ")
     assert(info.username == "SlavikVoronov")
 
-    print("")
+    assert(info.equipment.size == 9)
+  }
+
+  it should "parse guild castle, tag and name" in {
+    val message = "🐢[RUМ] ORCA\n"
+    val result = MessageParser(message).GuildName.run().get
+    assert(result.head == Castle.Tortuga)
+    assert(result.tail.head == "RUМ")
+    assert(result.tail.tail.head == "ORCA")
+  }
+
+  it should "parse guild commander" in {
+    val message = "Commander: devil_will_cry\n"
+    val result = MessageParser(message).GuildCommander.run().get
+    assert(result == "devil_will_cry")
+  }
+
+  it should "parse guild forward" in {
+    val message = "🐢[RUМ] ORCA\n" +
+      "Commander: devil_will_cry\n" +
+      "🏅Level: 6 🎖Glory: 4795\n" +
+      "👥 14/18\n" +
+      "Advisers:\n" +
+      " - Monk Raimundus, lvl.2 Strategist /adv_pt62\n"
+
+    val result = MessageParser(message).GuildInfo.run().get
+    assert(result.castle == Castle.Tortuga)
+    assert(result.guildTag == "RUМ")
+    assert(result.guildName == "ORCA")
+    assert(result.commander == "devil_will_cry")
   }
 
   private def testInput[T](message: String) = {
