@@ -1,13 +1,25 @@
 package parsers
 
 import entity.player._
-import entity.{HeroForwardAction, OnStartAction}
+import entity.{GuildForwardAction, HeroForwardAction, OnStartAction}
 import org.scalatest.FlatSpec
 
 class MessageParserTest extends FlatSpec {
 
   "Parser" should "recognize /onStart command" in {
     testInput[OnStartAction]("/start")
+  }
+
+  it should "parse hero level" in {
+    val message = "🏅Уровень: 48\n"
+    val result = MessageParser(message).HeroLevel.run().get
+    assert(result == 48)
+  }
+
+  it should "parse hero class" in {
+    val message = "⚔️Класс: /class\n"
+    val result = MessageParser(message).HeroClassRule.run().get
+    assert(result == HeroClass.Knight)
   }
 
   it should "parse hero equipment with enhancements" in {
@@ -76,6 +88,8 @@ class MessageParserTest extends FlatSpec {
     assert(info.castle == Castle.Tortuga)
     assert(info.guildTag.getOrElse("") == "RUМ")
     assert(info.username == "SlavikVoronov")
+    assert(info.level == 48)
+    assert(info.heroClass == HeroClass.Knight)
 
     assert(info.equipment.size == 9)
   }
@@ -102,11 +116,14 @@ class MessageParserTest extends FlatSpec {
       "Advisers:\n" +
       " - Monk Raimundus, lvl.2 Strategist /adv_pt62\n"
 
-    val result = MessageParser(message).GuildInfo.run().get
-    assert(result.castle == Castle.Tortuga)
-    assert(result.guildTag == "RUМ")
-    assert(result.guildName == "ORCA")
-    assert(result.commander == "devil_will_cry")
+    val result = MessageParser(message).Input.run().get
+    assert(result.isInstanceOf[GuildForwardAction])
+    val info = result.asInstanceOf[GuildForwardAction]
+
+    assert(info.castle == Castle.Tortuga)
+    assert(info.guildTag == "RUМ")
+    assert(info.guildName == "ORCA")
+    assert(info.commander == "devil_will_cry")
   }
 
   private def testInput[T](message: String) = {

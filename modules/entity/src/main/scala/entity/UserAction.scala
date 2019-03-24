@@ -1,6 +1,7 @@
 package entity
 
 import entity.player.Castle.Castle
+import entity.player.HeroClass.HeroClass
 import entity.player.ItemInfo
 
 
@@ -17,6 +18,8 @@ case class HeroForwardAction
   castle: Castle,
   guildTag: Option[String],
   username: String,
+  level: Int,
+  heroClass: HeroClass,
   equipment: Seq[ItemInfo],
 ) extends UserForwardAction
 

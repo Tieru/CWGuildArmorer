@@ -1,7 +1,8 @@
 package parsers
 
 import entity.player.Castle.Castle
-import entity.player.{Castle, Equipment, ItemInfo}
+import entity.player.HeroClass.HeroClass
+import entity.player.{Castle, Equipment, HeroClass, ItemInfo}
 import entity.{GuildForwardAction, HeroForwardAction, OnStartAction}
 import org.parboiled2._
 
@@ -25,11 +26,17 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   def ForwardedMessage = rule {
-    HeroForwardRule
+    HeroForwardRule | GuildInfo
   }
 
   def HeroForwardRule = rule {
-    CastleRule ~ optional(GuildTag) ~ Username ~ SkipToEquipmentPart ~ EquipmentTotal ~ oneOrMore(ANY) ~> HeroForwardAction
+    CastleRule ~ optional(GuildTag) ~ Username ~
+      HeroLevel ~
+      SkipToRang ~
+      optional(Achievements) ~
+      HeroClassRule ~
+      EquipmentTotal ~
+      oneOrMore(ANY) ~> HeroForwardAction
   }
 
   def CastleRule: Rule1[Castle] = rule {
@@ -47,11 +54,23 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   def Username: Rule1[String] = rule {
-    capture(oneOrMore(!EOL ~ ANY))
+    capture(oneOrMore(!EOL ~ ANY)) ~ EOL
   }
 
-  def SkipToEquipmentPart = rule {
-    oneOrMore(!"\uD83C\uDFBD" ~ ANY)
+  def HeroLevel: Rule1[Int] = rule {
+    "🏅Уровень: " ~ capture(oneOrMore(CharPredicate.Digit)) ~> (_.toInt) ~ EOL
+  }
+
+  def HeroClassRule: Rule1[HeroClass] = rule {
+    capture(oneOrMore(!"️К" ~ ANY)) ~> (HeroClass.byString(_)) ~ "️Класс: /class" ~ EOL ~ EOL ~ EOL
+  }
+
+  def SkipToRang = rule {
+    oneOrMore(!"📚" ~ ANY) ~ oneOrMore(!EOL ~ ANY) ~ EOL
+  }
+
+  def Achievements = rule {
+    "🎉Достижения: /ach\n"
   }
 
   def EquipmentTotal: Rule1[Seq[ItemInfo]] = rule {
