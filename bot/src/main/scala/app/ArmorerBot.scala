@@ -2,15 +2,18 @@ package app
 
 import java.net.{Authenticator, InetSocketAddress, PasswordAuthentication, Proxy}
 
-import com.bot4s.telegram.api.{Polling, RequestHandler, TelegramBot}
 import com.bot4s.telegram.api.declarative.{Callbacks, Commands}
+import com.bot4s.telegram.api.{Polling, RequestHandler, TelegramBot}
 import com.bot4s.telegram.clients.ScalajHttpClient
 import com.bot4s.telegram.models.Message
 import com.google.inject.{Guice, Injector}
 import com.softwaremill.sttp.SttpBackend
 import com.softwaremill.sttp.okhttp.OkHttpFutureBackend
 import com.typesafe.config.ConfigFactory
+import handler.GeneralMessageHandler
 import injection.ApplicationModule
+import net.codingwell.scalaguice.InjectorExtensions._
+import response.{BotMessageContext, MessageContext}
 
 import scala.concurrent.Future
 
@@ -20,6 +23,8 @@ object ArmorerBot extends TelegramBot
   with Callbacks {
 
   val injector: Injector = Guice.createInjector(new ApplicationModule())
+
+  private val messageHandler = injector.instance[GeneralMessageHandler]
 
   implicit val backend: SttpBackend[Future, Nothing] = OkHttpFutureBackend()
 
@@ -35,9 +40,10 @@ object ArmorerBot extends TelegramBot
   }
 
   override def receiveMessage(msg: Message): Unit = {
-    logger.info(s"Received Message: ${msg.text}")
+    implicit val message: Message = msg
+    implicit val context: MessageContext = new BotMessageContext(request, this)
+    messageHandler.message(msg)
   }
-
 
   private def buildProxySettings(): Proxy = {
     val configs = ConfigFactory.load()

@@ -35,15 +35,10 @@ lazy val service = project
     entity
   )
 
-lazy val localization = project
-  .in(file("./modules/localization"))
-  .settings(Common.projectSettings)
-
 lazy val messages = project
   .in(file("./modules/messages"))
   .settings(Common.projectSettings)
   .dependsOn(
-    localization,
     entity
   )
 
@@ -57,6 +52,5 @@ lazy val bot = project
   .dependsOn(
     service,
     messages,
-    localization,
     entity
   )
