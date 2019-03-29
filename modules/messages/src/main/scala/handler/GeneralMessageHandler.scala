@@ -2,11 +2,11 @@ package handler
 
 import com.bot4s.telegram.api.declarative.Callbacks
 import com.bot4s.telegram.models.{CallbackQuery, Message}
-import entity.{OnStartAction, UserAction}
+import entity.{HeroForwardAction, OnStartAction, UserAction}
 import javax.inject.Inject
 import org.parboiled2.ParseError
 import parsers.MessageParser
-import response.registration.ProfileMessageHandler
+import response.profile.ProfileMessageHandler
 import response.{MessageContext, RequestContext}
 import slogging.LazyLogging
 
@@ -35,6 +35,7 @@ class GeneralMessageHandler @Inject()(private val handlerProvider: HandlerProvid
   private def processMessage(action: UserAction, msg: Message)(implicit context: MessageContext): Unit = {
     action match {
       case _: OnStartAction => onStart(msg)
+      case profile: HeroForwardAction => onHeroForward(msg, profile)
     }
   }
 
@@ -44,5 +45,10 @@ class GeneralMessageHandler @Inject()(private val handlerProvider: HandlerProvid
   private def onStart(msg: Message)(implicit context: MessageContext): Unit = {
     val handler = handlerProvider.provide[ProfileMessageHandler]()
     handler.onStart(msg.from.get.id)
+  }
+
+  private def onHeroForward(msg: Message, profile: HeroForwardAction)(implicit context: MessageContext): Unit = {
+    val handler = handlerProvider.provide[ProfileMessageHandler]()
+    handler.onHeroInfo(msg.from.get.id, msg.forwardFrom, msg.forwardDate, profile)
   }
 }

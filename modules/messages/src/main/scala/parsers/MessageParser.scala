@@ -32,9 +32,10 @@ case class MessageParser(val input: ParserInput) extends Parser {
   def HeroForwardRule = rule {
     CastleRule ~ optional(GuildTag) ~ Username ~
       HeroLevel ~
-      SkipToRang ~
+      SkipToRank ~
       optional(Achievements) ~
       HeroClassRule ~
+      SkipToEquipment ~
       EquipmentTotal ~
       oneOrMore(ANY) ~> HeroForwardAction
   }
@@ -62,10 +63,10 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   def HeroClassRule: Rule1[HeroClass] = rule {
-    capture(oneOrMore(!"️К" ~ ANY)) ~> (HeroClass.byString(_)) ~ "️Класс: /class" ~ EOL ~ EOL ~ EOL
+    capture(oneOrMore(!"️К" ~ ANY)) ~> (HeroClass.byString(_)) ~ "️Класс: /class"
   }
 
-  def SkipToRang = rule {
+  def SkipToRank = rule {
     oneOrMore(!"📚" ~ ANY) ~ oneOrMore(!EOL ~ ANY) ~ EOL
   }
 
@@ -76,6 +77,10 @@ case class MessageParser(val input: ParserInput) extends Parser {
   def EquipmentTotal: Rule1[Seq[ItemInfo]] = rule {
     "\uD83C\uDFBDЭкипировка +" ~ oneOrMore(CharPredicate.Digit) ~ "⚔+" ~ oneOrMore(CharPredicate.Digit) ~ "🛡" ~ EOL ~
       EquipmentItems
+  }
+
+  def SkipToEquipment = rule {
+    oneOrMore(!"\uD83C\uDFBD" ~ ANY)
   }
 
   def EquipmentItems: Rule1[Seq[ItemInfo]] = rule {
