@@ -1,1 +1,3 @@
 start.welcome=Добро пожаловать! Пожалуйста, отправь свой /hero
+hero.update.success=Профиль успешно обновлен
+guild.update.success=Данные гильдии обновлены
