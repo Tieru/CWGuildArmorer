@@ -17,11 +17,13 @@ class ProfileMessageHandlerImpl @Inject()(service: ProfileService)(implicit ec: 
 
   override def onStart(userId: Int)(implicit context: MessageContext): Future[Try[Boolean]] = {
     service.onStart(userId)
-      .map(user => user.hero match {
-        case Some(_) => context.reply(Messages("start.welcome"))
-        case None =>
-      })
-      .map(_ => Success(true))
+      .map { user =>
+        if (user.hero.isEmpty) {
+          context.reply(Messages("start.welcome"))
+        }
+
+        Success(true)
+      }
   }
 
   override def onHeroInfo(userId: Int,

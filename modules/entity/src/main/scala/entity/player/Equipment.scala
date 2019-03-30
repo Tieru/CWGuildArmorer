@@ -1,8 +1,8 @@
 package entity.player
 
-case class ItemInfo(equipment: Equipment, enhancement: Int)
+sealed class Equipment(val id: Int, val name: String, val attack: Int = 0, val defence: Int = 0, val stamina: Int = 0, val storage: Int = 0)
 
-sealed abstract class Equipment(id: Int, name: String, attack: Int = 0, defence: Int = 0, stamina: Int = 0, storage: Int = 0)
+case class ItemInfo(equipment: Equipment, enhancement: Int)
 
 case object ChampionSword extends Equipment(1, "Champion Sword", 31)
 
@@ -24,7 +24,7 @@ case object RoyalGuardCape extends Equipment(8, "Royal Guard Cape", 1, 1)
 
 object Equipment {
 
-  private val items = Map(
+  private val mapByName = Map(
     "Champion Sword" -> ChampionSword,
     "Ghost dagger" -> GhostDagger,
     "Hunter Helmet" -> HunterHelmet,
@@ -36,7 +36,19 @@ object Equipment {
     "Royal Guard Cape" -> RoyalGuardCape,
   )
 
-  def byName(name: String): Option[Equipment] = {
-    items.get(name)
-  }
+  private val mapById = Map(
+    1 -> ChampionSword,
+    2 -> GhostDagger,
+    3 -> HunterHelmet,
+    4 -> GhostGloves,
+    5 -> HunterArmor,
+    6 -> LionBoots,
+    7 -> Saddlebag,
+    8 -> Flask,
+    9 -> RoyalGuardCape,
+  )
+
+  def byName(name: String): Option[Equipment] = mapByName.get(name)
+
+  def byId(id: Int): Option[Equipment] = mapById.get(id)
 }

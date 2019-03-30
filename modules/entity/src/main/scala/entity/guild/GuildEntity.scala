@@ -4,9 +4,9 @@ import entity.player.Castle.Castle
 
 case class GuildEntity
 (
-  id: String,
+  id: Int,
   castle: Castle,
-  name: String,
+  name: Option[String],
   tag: String,
-  commanderId: String,
+  commander: Option[String],
 )
