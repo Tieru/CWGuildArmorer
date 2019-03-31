@@ -1,10 +1,11 @@
 package injection
 
 import com.google.inject.AbstractModule
-import dao.{UserRepository, UserRepositoryImpl}
-import handler.{GeneralMessageHandler, HandlerProvider, HandlerProviderImpl, ProfileMessageHandlerImpl}
+import dao.{GuildInfoRepository, GuildInfoRepositoryImpl, UserRepository, UserRepositoryImpl}
+import handler._
 import net.codingwell.scalaguice.ScalaModule
 import provider.DatabaseProvider
+import response.guild.GuildInfoMessageHandler
 import response.profile.ProfileMessageHandler
 import service.guild.{GuildInfoService, GuildInfoServiceImpl}
 import service.profile.{ProfileService, ProfileServiceImpl}
@@ -23,11 +24,13 @@ class ApplicationModule extends AbstractModule with ScalaModule {
     bind[GeneralMessageHandler].asEagerSingleton()
 
     bind[ProfileMessageHandler].to[ProfileMessageHandlerImpl].asEagerSingleton()
+    bind[GuildInfoMessageHandler].to[GuildInfoMessageHandlerImpl].asEagerSingleton()
 
     bind[ProfileService].to[ProfileServiceImpl].asEagerSingleton()
     bind[GuildInfoService].to[GuildInfoServiceImpl].asEagerSingleton()
 
     bind(classOf[Database]).toProvider(classOf[DatabaseProvider])
     bind[UserRepository].to[UserRepositoryImpl].asEagerSingleton()
+    bind[GuildInfoRepository].to[GuildInfoRepositoryImpl].asEagerSingleton()
   }
 }

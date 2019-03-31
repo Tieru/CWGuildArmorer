@@ -9,7 +9,8 @@ object ErrorCode extends Enumeration {
   Unknown,
   ForwardFromWrongUser,
   NewerRecordAlreadyExists,
-  NoDataAvailable
+  NoDataAvailable,
+  NotInGuild
   : ErrorCode.Value = Value
 }
 
