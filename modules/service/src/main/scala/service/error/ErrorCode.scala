@@ -10,7 +10,9 @@ object ErrorCode extends Enumeration {
   ForwardFromWrongUser,
   NewerRecordAlreadyExists,
   NoDataAvailable,
-  NotInGuild
+  NotInGuild,
+  NoHeroInfo,
+  NotInYourGuild
   : ErrorCode.Value = Value
 }
 
