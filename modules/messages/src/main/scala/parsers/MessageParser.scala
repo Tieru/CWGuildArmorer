@@ -65,7 +65,7 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   def HeroClassRule: Rule1[HeroClass] = rule {
-    capture(oneOrMore(!"️К" ~ ANY)) ~> (HeroClass.byString(_)) ~ "️Класс: /class"
+    capture(Emoji) ~> (HeroClass.byString(_)) ~ zeroOrMore(!"К" ~ ANY) ~ "Класс: /class"
   }
 
   def SkipToRank = rule {
@@ -127,6 +127,10 @@ case class MessageParser(val input: ParserInput) extends Parser {
 
   def Digits = rule {
     oneOrMore(CharPredicate.Digit)
+  }
+
+  def Emoji = rule {
+    oneOrMore(CharPredicate('\u203C' to '\u3299') | CharPredicate('\uD83C' to '\uDFFF'))
   }
 
   def EOL = rule {

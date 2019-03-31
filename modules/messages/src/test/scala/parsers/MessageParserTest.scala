@@ -33,6 +33,12 @@ class MessageParserTest extends FlatSpec {
     assert(result == HeroClass.Knight)
   }
 
+  it should "parse sentinel hero class" in {
+    val message = "🛡Класс: /class\n"
+    val result = MessageParser(message).HeroClassRule.run().get
+    assert(result == HeroClass.Sentinel)
+  }
+
   it should "parse hero equipment with enhancements" in {
     val message = "⚡+3 Champion Sword +37⚔\n"
     val result = MessageParser(message).EquipmentItem.run().get.get
