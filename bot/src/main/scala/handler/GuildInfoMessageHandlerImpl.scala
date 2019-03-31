@@ -22,4 +22,21 @@ class GuildInfoMessageHandlerImpl @Inject()(private val service: GuildInfoServic
         Success(true)
       }
   }
+
+  override def showGuildUserInfo(userId: Int, requestedUserId: Int)(implicit context: MessageContext): Future[Try[Boolean]] = {
+    service.getGuildMemberInfo(userId, requestedUserId)
+      .map { user =>
+        val hero = user.hero.get
+        var message = hero.username + "\n"
+        if (hero.equipment.isEmpty) {
+          message += Messages("guild.member.no_equipment")
+        } else {
+          hero.equipment.foreach(item => message += s"⚡️${item.enhancement} - ${item.equipment.name}\n")
+        }
+
+        context.reply(message)
+        Success(true)
+      }
+  }
+
 }

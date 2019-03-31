@@ -2,6 +2,7 @@ package service.guild
 
 import dao.{GuildInfoRepository, UserRepository}
 import entity.player.GuildPlayer
+import entity.user.UserEntity
 import javax.inject.Inject
 import service.error.{AppException, ErrorCode, ErrorInfo}
 
@@ -19,4 +20,6 @@ class GuildInfoServiceImpl @Inject()(private val userRepository: UserRepository,
         }
       }
   }
+
+  override def getGuildMemberInfo(userId: Int, requestedUserId: Int): Future[UserEntity] = ???
 }

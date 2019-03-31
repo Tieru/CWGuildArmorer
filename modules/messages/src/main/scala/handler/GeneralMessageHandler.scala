@@ -2,7 +2,7 @@ package handler
 
 import com.bot4s.telegram.api.declarative.Callbacks
 import com.bot4s.telegram.models.{CallbackQuery, Message}
-import entity._
+import entity.{OnPlayerInfoAction, _}
 import javax.inject.Inject
 import org.parboiled2.ParseError
 import parsers.MessageParser
@@ -37,6 +37,7 @@ class GeneralMessageHandler @Inject()(private val handlerProvider: HandlerProvid
     action match {
       case _: OnStartAction => onStart(msg)
       case _: OnGuildListAction => onGuildListRequest(msg)
+      case request: OnPlayerInfoAction => onGuildMemberInfoRequest(msg, request)
       case profile: HeroForwardAction => onHeroForward(msg, profile)
       case guild: GuildForwardAction => onGuildInfoForward(msg, guild)
     }
@@ -63,5 +64,10 @@ class GeneralMessageHandler @Inject()(private val handlerProvider: HandlerProvid
   private def onGuildListRequest(msg: Message)(implicit context: MessageContext): Unit = {
     val handler = handlerProvider.provide[GuildInfoMessageHandler]()
     handler.showGuildList(msg.from.get.id)
+  }
+
+  private def onGuildMemberInfoRequest(msg: Message, info: OnPlayerInfoAction)(implicit context: MessageContext): Unit = {
+    val handler = handlerProvider.provide[GuildInfoMessageHandler]()
+    handler.showGuildUserInfo(msg.from.get.id, info.id)
   }
 }

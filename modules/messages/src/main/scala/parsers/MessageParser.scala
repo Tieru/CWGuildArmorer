@@ -3,7 +3,7 @@ package parsers
 import entity.player.Castle.Castle
 import entity.player.HeroClass.HeroClass
 import entity.player.{Castle, Equipment, HeroClass, ItemInfo}
-import entity.{GuildForwardAction, HeroForwardAction, OnGuildListAction, OnStartAction}
+import entity._
 import org.parboiled2._
 
 //noinspection CaseClassParam,TypeAnnotation
@@ -23,7 +23,8 @@ case class MessageParser(val input: ParserInput) extends Parser {
 
   def CommandsRule = rule {
     Commands.START ~ push(new OnStartAction()) |
-    Commands.GUILD_LIST ~ push(new OnGuildListAction())
+    Commands.GUILD_LIST ~ push(new OnGuildListAction()) |
+    Commands.MEMBER_INFO ~ ch('_') ~ Number ~> OnPlayerInfoAction
   }
 
   def ForwardedMessage = rule {
@@ -119,6 +120,14 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   // Commons
+
+  def Number = rule {
+    capture(Digits) ~> (_.toInt)
+  }
+
+  def Digits = rule {
+    oneOrMore(CharPredicate.Digit)
+  }
 
   def EOL = rule {
     "\r\n" | "\n"

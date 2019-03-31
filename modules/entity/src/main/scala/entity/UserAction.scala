@@ -13,6 +13,8 @@ class OnStartAction extends UserCommandAction
 
 class OnGuildListAction extends UserCommandAction
 
+case class OnPlayerInfoAction(id: Int) extends UserCommandAction
+
 sealed trait UserForwardAction extends UserAction
 
 case class HeroForwardAction

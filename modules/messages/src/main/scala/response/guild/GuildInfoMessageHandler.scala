@@ -9,4 +9,6 @@ trait GuildInfoMessageHandler {
 
   def showGuildList(userId: Int)(implicit context: MessageContext): Future[Try[Boolean]]
 
+  def showGuildUserInfo(userId: Int, requestedUserId: Int)(implicit context: MessageContext): Future[Try[Boolean]]
+
 }
