@@ -6,6 +6,7 @@ import handler.{GeneralMessageHandler, HandlerProvider, HandlerProviderImpl, Pro
 import net.codingwell.scalaguice.ScalaModule
 import provider.DatabaseProvider
 import response.profile.ProfileMessageHandler
+import service.guild.{GuildInfoService, GuildInfoServiceImpl}
 import service.profile.{ProfileService, ProfileServiceImpl}
 import slick.jdbc.JdbcBackend.Database
 
@@ -24,6 +25,7 @@ class ApplicationModule extends AbstractModule with ScalaModule {
     bind[ProfileMessageHandler].to[ProfileMessageHandlerImpl].asEagerSingleton()
 
     bind[ProfileService].to[ProfileServiceImpl].asEagerSingleton()
+    bind[GuildInfoService].to[GuildInfoServiceImpl].asEagerSingleton()
 
     bind(classOf[Database]).toProvider(classOf[DatabaseProvider])
     bind[UserRepository].to[UserRepositoryImpl].asEagerSingleton()

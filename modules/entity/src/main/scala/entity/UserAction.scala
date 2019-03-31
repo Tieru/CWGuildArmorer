@@ -11,6 +11,8 @@ sealed trait UserCommandAction extends UserAction
 
 class OnStartAction extends UserCommandAction
 
+class OnGuildListAction extends UserCommandAction
+
 sealed trait UserForwardAction extends UserAction
 
 case class HeroForwardAction

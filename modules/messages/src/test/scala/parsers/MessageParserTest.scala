@@ -1,13 +1,17 @@
 package parsers
 
 import entity.player._
-import entity.{GuildForwardAction, HeroForwardAction, OnStartAction}
+import entity.{GuildForwardAction, HeroForwardAction, OnGuildListAction, OnStartAction}
 import org.scalatest.FlatSpec
 
 class MessageParserTest extends FlatSpec {
 
   "Parser" should "recognize /onStart command" in {
     testInput[OnStartAction]("/start")
+  }
+
+  it should "recognize /list command" in {
+    testInput[OnGuildListAction]("/list")
   }
 
   it should "parse hero level" in {
