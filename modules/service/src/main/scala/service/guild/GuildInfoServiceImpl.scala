@@ -4,6 +4,7 @@ import dao.{GuildInfoRepository, UserRepository}
 import entity.player.GuildPlayer
 import entity.user.UserEntity
 import javax.inject.Inject
+import service.error.ErrorRecoverExtensions._
 import service.error.{AppException, ErrorCode, ErrorInfo}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,6 +23,11 @@ class GuildInfoServiceImpl @Inject()(private val userRepository: UserRepository,
   }
 
   override def getGuildMemberInfo(userId: Int, requestedUserId: Int): Future[UserEntity] = {
+    doGetGuildMemberInfo(userId, requestedUserId)
+      .recoverWithDefaultError()
+  }
+
+  private def doGetGuildMemberInfo(userId: Int, requestedUserId: Int): Future[UserEntity] = {
     for {
       user <- userRepository.getOrCreateUser(userId)
       requested <- userRepository.getOrCreateUser(requestedUserId)
