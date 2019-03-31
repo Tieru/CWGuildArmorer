@@ -37,17 +37,15 @@ class GuildInfoServiceImpl @Inject()(private val userRepository: UserRepository,
 
   private def processUserInfoRequest(user: UserEntity, requested: UserEntity): Future[UserEntity] = {
     if (user.guild.isEmpty) {
-      throw AppException(ErrorInfo(ErrorCode.NotInGuild))
+      Future.failed(AppException(ErrorInfo(ErrorCode.NotInGuild)))
     }
-
-    if (requested.guild.isEmpty || requested.guild.get.id != user.guild.get.id) {
-      throw AppException(ErrorInfo(ErrorCode.NotInYourGuild))
+    else if (requested.guild.isEmpty || requested.guild.get.id != user.guild.get.id) {
+      Future.failed(AppException(ErrorInfo(ErrorCode.NotInYourGuild)))
     }
-
-    if (requested.hero.isEmpty) {
-      throw AppException(ErrorInfo(ErrorCode.NoHeroInfo))
+    else if (requested.hero.isEmpty) {
+      Future.failed(AppException(ErrorInfo(ErrorCode.NoHeroInfo)))
+    } else {
+      Future.successful(requested)
     }
-
-    Future.successful(requested)
   }
 }

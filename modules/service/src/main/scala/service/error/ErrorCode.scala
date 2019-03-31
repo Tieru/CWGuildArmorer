@@ -5,8 +5,7 @@ import service.error.ErrorCode.ErrorCode
 object ErrorCode extends Enumeration {
   type ErrorCode = Value
 
-  val Unregistered,
-  Unknown,
+  val Unknown,
   ForwardFromWrongUser,
   NewerRecordAlreadyExists,
   NoDataAvailable,
@@ -18,5 +17,5 @@ object ErrorCode extends Enumeration {
 
 case class ErrorInfo(errorCode: ErrorCode)
 
-case class AppException(data: ErrorInfo) extends RuntimeException
+case class AppException(data: ErrorInfo, cause: Option[Throwable] = None) extends RuntimeException(cause.orNull)
 

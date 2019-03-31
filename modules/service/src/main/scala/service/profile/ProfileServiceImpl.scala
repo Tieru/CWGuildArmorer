@@ -25,8 +25,7 @@ class ProfileServiceImpl @Inject()(userRepository: UserRepository)(implicit ec: 
                                forwardDate: Option[Int],
                                info: HeroForwardAction): Future[HeroEntity] = {
     validateIsChatWarsBot(forwardFrom)
-
-    userRepository.getOrCreateUser(userId)
+      .flatMap(_ => userRepository.getOrCreateUser(userId))
       .flatMap { user =>
         var lastUpdate: Option[Long] = None
         if (user.hero.isDefined) {
@@ -42,20 +41,19 @@ class ProfileServiceImpl @Inject()(userRepository: UserRepository)(implicit ec: 
 
   override def onGuildUpdate(userId: Int, forwardFrom: Option[Int], forwardDate: Option[Int], info: GuildForwardAction): Future[GuildEntity] = {
     validateIsChatWarsBot(forwardFrom)
-
-    userRepository.getOrCreateGuild(info.castle, Option(info.guildName), info.guildTag, Option(info.commander))
+      .flatMap(_ => userRepository.getOrCreateGuild(info.castle, Option(info.guildName), info.guildTag, Option(info.commander)))
       .flatMap(guild => userRepository.updateGuild(userId, guild.id))
       .recoverWithDefaultError()
   }
 
-  private def validateIsChatWarsBot(forwardFrom: Option[Int]): Int = {
+  private def validateIsChatWarsBot(forwardFrom: Option[Int]): Future[Int] = {
     val id = forwardFrom.getOrElse(-1)
 
-    if (id != BOT_ID) {
-      throw AppException(ErrorInfo(ErrorCode.ForwardFromWrongUser))
+    if (id == BOT_ID) {
+      Future.successful(id)
+    } else {
+      Future.failed(AppException(ErrorInfo(ErrorCode.ForwardFromWrongUser)))
     }
-
-    id
   }
 
   private def validateForwardDate(forwardDate: Option[Int], storedDate: Option[Long]): Long = {

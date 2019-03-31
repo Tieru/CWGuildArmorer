@@ -1,5 +1,12 @@
 start.welcome=Добро пожаловать! Пожалуйста, отправь свой /hero
 hero.update.success=Профиль успешно обновлен
+hero.update.fail=Не удалось обновить профиль
+hero.update.fail_wrong_bot=Принимаются только сообщения отправленные ботом @ChatWarsBot
+hero.update.fail_old_report=Имеются более свежие данные вашего профиля
 guild.update.success=Данные гильдии обновлены
 guild.list.title=Список участников\n
+guild.list.fail_not_in_guild=Вы не в гильдии
 guild.member.no_equipment=Предметы не найдены
+guild.member.fail_player_is_not_in_guild=Не похоже, чтобы этот игрок был в твоей гильдии. Возможно, он просто забыл об этом сообщить
+guild.member.fail_no_info=Этот игрок не сообщил никаких данных о себе. Попроси его отправить мне /hero
+error.unknown=Неизвестная ошибка

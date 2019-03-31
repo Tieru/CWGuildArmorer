@@ -1,17 +1,29 @@
 package service.error
 
-import scala.concurrent.{ExecutionContext, Future}
+import service.error.ErrorCode.ErrorCode
+import slogging.LazyLogging
 
-object ErrorRecoverExtensions {
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
+
+object ErrorRecoverExtensions extends LazyLogging {
 
   implicit class FutureRecover[T](val future: Future[T])(implicit ec: ExecutionContext) {
 
     def recoverWithDefaultError(): Future[T] = {
       future.recoverWith {
-        case e: AppException => throw e
-        case _ => throw AppException(ErrorInfo(ErrorCode.Unknown))
+        case e: AppException => Future.failed(e)
+        case e: Throwable => Future.failed(AppException(ErrorInfo(ErrorCode.ForwardFromWrongUser)))
       }
     }
+
+    def recoverFromAppError(pf: PartialFunction[ErrorCode, Future[T]]): Future[T] =
+      future.transformWith {
+        case Failure(t) =>
+          logger.error(s"Default app error handling for error $t")
+          pf.applyOrElse(t.asInstanceOf[AppException].data.errorCode, (_: ErrorCode) => future)
+        case Success(_) => future
+      }
   }
 
 }
