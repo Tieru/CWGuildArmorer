@@ -102,7 +102,7 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   def EquipmentName: Rule1[Option[Equipment]] = rule {
-    capture(oneOrMore(!" +" ~ ANY)) ~ oneOrMore(!EOL ~ ANY) ~> (Equipment.byName(_))
+    capture(oneOrMore(!anyOf("+(") ~ ANY)) ~ oneOrMore(!EOL ~ ANY) ~> ((name: String) => Equipment.byName(name.trim))
   }
 
   // Guild

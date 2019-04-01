@@ -54,6 +54,15 @@ class MessageParserTest extends FlatSpec {
     assert(item.enhancement == 0)
   }
 
+  it should "parse an item next to arrows" in {
+    val message = "Silver arrow (152)\n⚡+1 Hunter Helmet +5⚔ +12🛡\n"
+    val result = MessageParser(message).EquipmentItems.run().get
+    assert(result.size == 1)
+    val item = result.head
+    assert(item.equipment == HunterHelmet)
+    assert(item.enhancement == 1)
+  }
+
   it should "parse equipment type" in {
     val message = "Ghost dagger +13⚔ +2🛡\n"
     val result = MessageParser(message).EquipmentName.run().get
