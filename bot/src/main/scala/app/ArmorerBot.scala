@@ -61,7 +61,7 @@ object ArmorerBot extends TelegramBot
     }
 
     val port = configs.getInt("bot.proxyPort")
-    new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(host, port))
+    new Proxy(Proxy.Type.SOCKS, InetSocketAddress.createUnresolved(host, port))
   }
 
   logger.info("Bot started successfully")
