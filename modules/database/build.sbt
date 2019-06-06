@@ -8,9 +8,9 @@ libraryDependencies ++= Seq(
   "com.novocode" % "junit-interface" % "0.10" % Test,
 )
 
-lazy val databaseUrl = sys.props.getOrElse("DB_DEFAULT_URL", "'Url is not set'")
-lazy val databaseUser = sys.props.getOrElse("DB_DEFAULT_USER", "'User is not set'")
-lazy val databasePassword = sys.props.getOrElse("DB_DEFAULT_PASSWORD", "")
+lazy val databaseUrl = sys.env.getOrElse("DB_DEFAULT_URL", "'Url is not set'")
+lazy val databaseUser = sys.env.getOrElse("DB_DEFAULT_USER", "'User is not set'")
+lazy val databasePassword = sys.env.getOrElse("DB_DEFAULT_PASSWORD", "")
 
 
 slickCodegenDatabaseUrl := databaseUrl
