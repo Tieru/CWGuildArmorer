@@ -4,6 +4,7 @@ import entity.player.Castle.Castle
 import entity.player.HeroClass.HeroClass
 import entity.player.{Castle, Equipment, HeroClass, ItemInfo}
 import entity._
+import entity.util.EquipmentUtils
 import org.parboiled2._
 
 //noinspection CaseClassParam,TypeAnnotation
@@ -102,7 +103,7 @@ case class MessageParser(val input: ParserInput) extends Parser {
   }
 
   def EquipmentName: Rule1[Option[Equipment]] = rule {
-    capture(oneOrMore(!anyOf("+(") ~ ANY)) ~ oneOrMore(!EOL ~ ANY) ~> ((name: String) => Equipment.byName(name.trim))
+    capture(oneOrMore(!anyOf("+(") ~ ANY)) ~ oneOrMore(!EOL ~ ANY) ~> ((name: String) => EquipmentUtils.byNameIgnoreEngravings(name.trim))
   }
 
   // Guild

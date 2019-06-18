@@ -85,6 +85,26 @@ class MessageParserTest extends FlatSpec {
     assert(result.size == 9)
   }
 
+  it should "parse hero equipment with right engravings" in {
+    val message = "🎽Экипировка +75⚔+51🛡\n" +
+      "⚡+4 Eclipse Canis dirus +49⚔\n"
+
+    val result = MessageParser(message).EquipmentTotal.run().get
+    assert(result.size == 1)
+    val item = result.head
+    assert(item.equipment == Eclipse)
+  }
+
+  it should "parse hero equipment with left engravings" in {
+    val message = "🎽Экипировка +75⚔+51🛡\n" +
+      "⚡+1 Kladenets Champion Sword +21⚔\n"
+
+    val result = MessageParser(message).EquipmentTotal.run().get
+    assert(result.size == 1)
+    val item = result.head
+    assert(item.equipment == ChampionSword)
+  }
+
   it should "parse hero forward" in {
     val message = "🐢[RUМ]SlavikVoronov\n" +
       "🏅Уровень: 48\n" +
