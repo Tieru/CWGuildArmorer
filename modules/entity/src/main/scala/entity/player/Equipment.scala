@@ -138,7 +138,6 @@ object Equipment {
 
     "Saddlebag" -> Saddlebag,
     "Flask" -> Flask,
-    "Royal Guard Cape" -> RoyalGuardCape,
     "Order Armor" -> OrderArmor,
     "Order Helmet" -> OrderHelmet,
     "Order Boots" -> OrderBoots,
@@ -228,9 +227,7 @@ object Equipment {
   )
 
   private val mapById = Map(
-    "a6" -> Saddlebag,
-    "a7" -> Flask,
-    "a8" -> RoyalGuardCape,
+    "a26" -> RoyalGuardCape,
     "a27" -> OrderArmor,
     "a28" -> OrderHelmet,
     "a29" -> OrderBoots,
@@ -244,6 +241,8 @@ object Equipment {
     "a37" -> ClarityCirclet,
     "a38" -> ClarityShoes,
     "a39" -> ClarityBracers,
+    "a42" -> Saddlebag,
+    "a43" -> Flask,
     "a44" -> VeteransCloak,
     "a45" -> CrusaderArmor,
     "a46" -> CrusaderHelmet,
